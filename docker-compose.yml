@@ -1,0 +1,52 @@
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: jay
+      POSTGRES_PASSWORD: jay_local_password
+      POSTGRES_DB: jay
+    ports:
+      - "5442:5432"
+    volumes:
+      - ./local-data/postgres:/var/lib/postgresql/data
+      - ./infra/postgres/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+
+  neo4j:
+    image: neo4j:5
+    environment:
+      NEO4J_AUTH: neo4j/jay_local_password
+    ports:
+      - "7474:7474"
+      - "7687:7687"
+    volumes:
+      - ./local-data/neo4j/data:/data
+      - ./local-data/neo4j/logs:/logs
+
+  qdrant:
+    image: qdrant/qdrant:v1.11.0
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - ./local-data/qdrant:/qdrant/storage
+
+  redis:
+    image: redis:7
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6382:6379"
+    volumes:
+      - ./local-data/redis:/data
+
+  minio:
+    image: minio/minio:RELEASE.2024-08-17T01-24-54Z
+    command: ["server", "/data", "--console-address", ":9001"]
+    environment:
+      MINIO_ROOT_USER: jay
+      MINIO_ROOT_PASSWORD: jay_local_password
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - ./local-data/minio:/data
+

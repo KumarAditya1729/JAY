@@ -1,0 +1,4 @@
+kind,title,body,source,importance,tags,intent_ids
+idea,Event Sourcing Value,Replaying state is much better than mutating it directly.,Personal Reflection,5,"engineering,architecture",intent_123
+meeting,Meeting with Investor X,Discussed the roadmap for Arkashri and potential Series A.,Calendar,4,"arkashri,fundraising",
+idea,Founder Model,Instead of an LLM simulating the founder, use deterministic patterns from the ledger.,Notes,5,"jay,architecture",intent_124

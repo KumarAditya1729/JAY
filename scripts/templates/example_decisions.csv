@@ -1,0 +1,4 @@
+statement,type,decision_date,options_considered,risks,expected_outcome,reversibility,success_criteria
+Build JAY before fundraising,strategic,2026-06-01,"Raise seed round, Build MVP first",Delay in hiring,Working prototype,"High","MVP fully functional"
+Choose local-first architecture,technical,2026-06-02,"Cloud first, Local first",Slower sync,Complete privacy,"Low","Zero data leaves laptop"
+Use event sourcing,technical,2026-06-03,"CRUD, Event Sourcing",Complexity,Perfect audit trail,"Low","Able to replay all state"
