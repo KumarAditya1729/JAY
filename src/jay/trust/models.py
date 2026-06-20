@@ -19,9 +19,15 @@ class TrustLedger(Base):
     impact_score: Mapped[float] = mapped_column(Numeric(4, 3), nullable=False)
     reversibility_score: Mapped[float] = mapped_column(Numeric(4, 3), nullable=False)
     evidence_score: Mapped[float] = mapped_column(Numeric(4, 3), nullable=False)
-    assumptions: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False, default=list)
-    evidence: Mapped[list[str]] = mapped_column(ARRAY(Text), nullable=False, default=list)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    assumptions: Mapped[list[str]] = mapped_column(
+        ARRAY(Text), nullable=False, default=list
+    )
+    evidence: Mapped[list[str]] = mapped_column(
+        ARRAY(Text), nullable=False, default=list
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 
     __table_args__ = (
         Index("idx_trust_ledger_entity_orm", "entity_type", "entity_id"),

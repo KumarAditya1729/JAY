@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from jay.db import get_session
@@ -22,7 +22,9 @@ router = APIRouter(prefix="/founder", tags=["Founder Model"])
 
 @router.get("/profile", response_model=FounderProfileResponse)
 def get_profile(session: Session = Depends(get_session)):
-    profile = session.query(FounderProfile).filter(FounderProfile.id == "default").first()
+    profile = (
+        session.query(FounderProfile).filter(FounderProfile.id == "default").first()
+    )
     if not profile:
         profile = FounderProfile(id="default")
         session.add(profile)
@@ -38,18 +40,34 @@ def get_profile(session: Session = Depends(get_session)):
         "communication_style": profile.communication_style,
         "leadership_style": profile.leadership_style,
         "learning_style": profile.learning_style,
-        "mission": [{"id": n.id, "title": n.title} for n in intent_nodes if n.node_type == "mission"],
-        "values": [{"id": n.id, "title": n.title} for n in intent_nodes if n.node_type == "value"],
-        "goals": [{"id": n.id, "title": n.title} for n in intent_nodes if n.node_type == "goal"],
+        "mission": [
+            {"id": n.id, "title": n.title}
+            for n in intent_nodes
+            if n.node_type == "mission"
+        ],
+        "values": [
+            {"id": n.id, "title": n.title}
+            for n in intent_nodes
+            if n.node_type == "value"
+        ],
+        "goals": [
+            {"id": n.id, "title": n.title}
+            for n in intent_nodes
+            if n.node_type == "goal"
+        ],
         "non_negotiables": [
-            {"id": n.id, "title": n.title} for n in intent_nodes if n.node_type == "non_negotiable"
+            {"id": n.id, "title": n.title}
+            for n in intent_nodes
+            if n.node_type == "non_negotiable"
         ],
     }
     return response_dict
 
 
 @router.patch("/profile", response_model=FounderProfileResponse)
-def update_profile(update: FounderProfileUpdate, session: Session = Depends(get_session)):
+def update_profile(
+    update: FounderProfileUpdate, session: Session = Depends(get_session)
+):
     service = FounderService(session)
     service.update_profile(update, actor_id="system")
     return get_profile(session)
@@ -66,7 +84,9 @@ def record_behavior(behavior: BehaviorCreate, session: Session = Depends(get_ses
 
 @router.get("/behavior", response_model=list[BehaviorResponse])
 def list_behavior(session: Session = Depends(get_session)):
-    return session.query(BehaviorLedger).order_by(BehaviorLedger.occurred_at.desc()).all()
+    return (
+        session.query(BehaviorLedger).order_by(BehaviorLedger.occurred_at.desc()).all()
+    )
 
 
 @router.get("/preferences", response_model=list[PreferenceEdgeResponse])

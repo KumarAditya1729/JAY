@@ -47,7 +47,7 @@ class FounderProfileResponse(BaseModel):
     communication_style: str | None
     leadership_style: str | None
     learning_style: str | None
-    
+
     mission: list[dict] = Field(default_factory=list)
     values: list[dict] = Field(default_factory=list)
     goals: list[dict] = Field(default_factory=list)

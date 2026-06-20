@@ -18,7 +18,9 @@ def get_trust_ledger(
 ) -> list[TrustLedger]:
     return (
         session.query(TrustLedger)
-        .filter(TrustLedger.entity_type == entity_type, TrustLedger.entity_id == entity_id)
+        .filter(
+            TrustLedger.entity_type == entity_type, TrustLedger.entity_id == entity_id
+        )
         .order_by(TrustLedger.created_at.desc())
         .limit(limit)
         .all()

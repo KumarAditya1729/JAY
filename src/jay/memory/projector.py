@@ -17,7 +17,7 @@ class MemoryProjector(Projector):
     def handle(self, event: EventLog, session: Session) -> None:
         if event.event_type != "memory.item_recorded":
             return
-            
+
         payload = event.payload
         item_id = event.entity_id
 

@@ -28,7 +28,9 @@ class LeverageProjector(Projector):
             knowledge_preserved_score=payload.get("knowledge_preserved_score", 0.0),
             decisions_improved_score=payload.get("decisions_improved_score", 0.0),
             risks_avoided_score=payload.get("risks_avoided_score", 0.0),
-            opportunities_captured_score=payload.get("opportunities_captured_score", 0.0),
+            opportunities_captured_score=payload.get(
+                "opportunities_captured_score", 0.0
+            ),
             notes=payload.get("notes"),
             created_at=event.occurred_at,
         )

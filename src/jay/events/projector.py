@@ -13,17 +13,14 @@ class Projector(ABC):
     @abstractmethod
     def name(self) -> str:
         """Name of the projector"""
-        pass
 
     @abstractmethod
     def handle(self, event: EventLog, session: Session) -> None:
         """Handle a single event and update the projection."""
-        pass
 
     @abstractmethod
     def reset(self, session: Session) -> None:
         """Reset the projection to an empty state."""
-        pass
 
 
 class GraphProjector(Projector):

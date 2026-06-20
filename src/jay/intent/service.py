@@ -5,6 +5,7 @@ from jay.intent.models import IntentNode, IntentEdge
 from jay.intent.projector import IntentProjector
 from jay.intent.schemas import IntentNodeCreate, IntentEdgeCreate
 
+
 class IntentService:
     def __init__(self, session: Session):
         self.session = session
@@ -21,8 +22,8 @@ class IntentService:
                 "node_type": node.node_type.value,
                 "title": node.title,
                 "description": node.description,
-                "status": node.status
-            }
+                "status": node.status,
+            },
         )
         self.session.add(event)
         IntentProjector().handle(event, self.session)
@@ -39,17 +40,21 @@ class IntentService:
             payload={
                 "source_id": edge.source_id,
                 "target_id": edge.target_id,
-                "relationship_type": edge.relationship_type
-            }
+                "relationship_type": edge.relationship_type,
+            },
         )
         self.session.add(event)
         IntentProjector().handle(event, self.session)
         self.session.commit()
-        return self.session.query(IntentEdge).filter_by(
-            source_id=edge.source_id,
-            target_id=edge.target_id,
-            relationship_type=edge.relationship_type
-        ).one()
+        return (
+            self.session.query(IntentEdge)
+            .filter_by(
+                source_id=edge.source_id,
+                target_id=edge.target_id,
+                relationship_type=edge.relationship_type,
+            )
+            .one()
+        )
 
     def list_nodes(self) -> list[IntentNode]:
         return self.session.query(IntentNode).all()

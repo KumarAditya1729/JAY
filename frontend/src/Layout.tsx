@@ -15,6 +15,7 @@ export default function Layout() {
   const navItems = [
     { path: '/', label: 'COMMAND CENTER', icon: Terminal },
     { path: '/overview', label: 'Home Dashboard', icon: LayoutDashboard },
+    { path: '/ingestion', label: 'Ingestion Center', icon: Target }, // Used Target temporarily, but let's import UploadCloud
     { path: '/briefings', label: 'Daily Briefing', icon: Sun },
     { path: '/decisions', label: 'Decision Center', icon: GitMerge },
     { path: '/intent', label: 'Intent Center', icon: Target },

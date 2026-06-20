@@ -58,4 +58,3 @@ class MemoryRead(BaseModel):
 class SearchResult(BaseModel):
     item: MemoryRead
     reason: str
-

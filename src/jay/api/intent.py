@@ -1,10 +1,14 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from jay.db import get_session
-from jay.intent.schemas import IntentEdgeCreate, IntentEdgeRead, IntentNodeCreate, IntentNodeRead
+from jay.intent.schemas import (
+    IntentEdgeCreate,
+    IntentEdgeRead,
+    IntentNodeCreate,
+    IntentNodeRead,
+)
 from jay.intent.service import IntentService
-from jay.intent.models import IntentNode
 
 router = APIRouter(prefix="/intent", tags=["Intent"])
 

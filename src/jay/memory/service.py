@@ -33,15 +33,17 @@ class MemoryService:
             event_metadata={"projection": "memory_items"},
         )
         self.session.add(event)
-        
+
         from jay.memory.projector import MemoryProjector
+
         MemoryProjector().handle(event, self.session)
-        
+
         from jay.trust.projector import TrustProjector
+
         TrustProjector().handle(event, self.session)
-        
+
         self.session.commit()
-        
+
         return self.session.query(MemoryItem).filter_by(id=item_id).one()
 
     def list_timeline(self, limit: int = 50) -> list[MemoryItem]:
@@ -58,8 +60,10 @@ class MemoryService:
         statement = (
             select(MemoryItem)
             .where(or_(MemoryItem.title.ilike(pattern), MemoryItem.body.ilike(pattern)))
-            .order_by(desc(MemoryItem.importance), desc(func.coalesce(MemoryItem.occurred_at, MemoryItem.created_at)))
+            .order_by(
+                desc(MemoryItem.importance),
+                desc(func.coalesce(MemoryItem.occurred_at, MemoryItem.created_at)),
+            )
             .limit(limit)
         )
         return list(self.session.scalars(statement))
-

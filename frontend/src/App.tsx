@@ -9,6 +9,7 @@ import Relationships from './pages/Relationships';
 import Memory from './pages/Memory';
 import Trust from './pages/Trust';
 import Founder from './pages/Founder';
+import IngestionCenter from './pages/IngestionCenter';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<CommandCenter />} />
           <Route path="overview" element={<Dashboard />} />
+          <Route path="ingestion" element={<IngestionCenter />} />
           <Route path="briefings" element={<Briefings />} />
           <Route path="decisions" element={<Decisions />} />
           <Route path="intent" element={<Intent />} />

@@ -9,7 +9,9 @@ router = APIRouter(prefix="/leverage", tags=["Leverage"])
 
 
 @router.post("/record", response_model=LeverageLedgerRead)
-def record_leverage(data: LeverageLedgerCreate, session: Session = Depends(get_session)):
+def record_leverage(
+    data: LeverageLedgerCreate, session: Session = Depends(get_session)
+):
     return LeverageService(session).record_leverage(data)
 
 

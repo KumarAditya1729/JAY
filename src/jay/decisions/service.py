@@ -14,7 +14,9 @@ class DecisionService:
         self.event_service = EventService(session)
         self.projector = DecisionProjector()
 
-    def record_decision(self, decision: DecisionCreate, actor_id: str) -> DecisionLedger:
+    def record_decision(
+        self, decision: DecisionCreate, actor_id: str
+    ) -> DecisionLedger:
         decision_id = str(uuid4())
 
         event = self.event_service.record(
@@ -30,7 +32,11 @@ class DecisionService:
         self.projector.handle(event, self.session)
         self.session.commit()
 
-        return self.session.query(DecisionLedger).filter(DecisionLedger.id == decision_id).one()
+        return (
+            self.session.query(DecisionLedger)
+            .filter(DecisionLedger.id == decision_id)
+            .one()
+        )
 
     def record_outcome(
         self, decision_id: str, outcome: DecisionOutcome, actor_id: str
@@ -47,4 +53,8 @@ class DecisionService:
         self.projector.handle(event, self.session)
         self.session.commit()
 
-        return self.session.query(DecisionLedger).filter(DecisionLedger.id == decision_id).one()
+        return (
+            self.session.query(DecisionLedger)
+            .filter(DecisionLedger.id == decision_id)
+            .one()
+        )

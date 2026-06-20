@@ -14,7 +14,9 @@ class IntentNode(Base):
     title: Mapped[str] = mapped_column(Text, nullable=False)
     description: Mapped[str | None] = mapped_column(Text)
     status: Mapped[str] = mapped_column(Text, nullable=False, default="active")
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
     )
@@ -25,7 +27,13 @@ class IntentNode(Base):
 class IntentEdge(Base):
     __tablename__ = "intent_edges"
 
-    source_id: Mapped[str] = mapped_column(String, ForeignKey("intent_nodes.id", ondelete="CASCADE"), primary_key=True)
-    target_id: Mapped[str] = mapped_column(String, ForeignKey("intent_nodes.id", ondelete="CASCADE"), primary_key=True)
+    source_id: Mapped[str] = mapped_column(
+        String, ForeignKey("intent_nodes.id", ondelete="CASCADE"), primary_key=True
+    )
+    target_id: Mapped[str] = mapped_column(
+        String, ForeignKey("intent_nodes.id", ondelete="CASCADE"), primary_key=True
+    )
     relationship_type: Mapped[str] = mapped_column(Text, primary_key=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )

@@ -11,7 +11,11 @@ class DecisionPatternDetector:
         patterns = []
         decisions = (
             self.session.query(DecisionLedger)
-            .filter(DecisionLedger.outcome_status.in_(["Success", "Partial Success", "Failure"]))
+            .filter(
+                DecisionLedger.outcome_status.in_(
+                    ["Success", "Partial Success", "Failure"]
+                )
+            )
             .all()
         )
 

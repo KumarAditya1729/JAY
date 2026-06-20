@@ -9,6 +9,7 @@ from jay.events.projector import Projector
 
 logger = logging.getLogger(__name__)
 
+
 class DecisionProjector(Projector):
     @property
     def name(self) -> str:
@@ -44,12 +45,18 @@ class DecisionProjector(Projector):
             intent_alignment_score=payload.get("intent_alignment_score", 0.5),
             trust_envelope=payload.get("trust_envelope"),
             linked_entity_ids=payload.get("linked_entity_ids", []),
-            decision_date=event.occurred_at
+            decision_date=event.occurred_at,
         )
         session.add(decision)
 
-    def _apply_decision_outcome_recorded(self, event: EventLog, session: Session) -> None:
-        decision = session.query(DecisionLedger).filter(DecisionLedger.id == event.entity_id).first()
+    def _apply_decision_outcome_recorded(
+        self, event: EventLog, session: Session
+    ) -> None:
+        decision = (
+            session.query(DecisionLedger)
+            .filter(DecisionLedger.id == event.entity_id)
+            .first()
+        )
         if decision:
             payload = event.payload
             decision.outcome_status = payload["outcome_status"]

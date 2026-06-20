@@ -12,7 +12,7 @@ class PreferenceEngine:
 
     def generate_graph(self) -> None:
         behaviors = self.session.query(BehaviorLedger).all()
-        
+
         action_counts = defaultdict(int)
         recommendation_accepted = defaultdict(int)
         recommendation_rejected = defaultdict(int)
@@ -31,7 +31,7 @@ class PreferenceEngine:
                 target=action,
                 rel="prefers_action",
                 weight=1.0 + (count * 0.1),
-                actor_id="system"
+                actor_id="system",
             )
 
         for rec, count in recommendation_accepted.items():
@@ -40,14 +40,14 @@ class PreferenceEngine:
                 target=rec,
                 rel="accepts_recommendation",
                 weight=1.0 + (count * 0.2),
-                actor_id="system"
+                actor_id="system",
             )
-            
+
         for rec, count in recommendation_rejected.items():
             self.service.update_preference_edge(
                 source="founder",
                 target=rec,
                 rel="rejects_recommendation",
                 weight=max(0.1, 1.0 - (count * 0.2)),
-                actor_id="system"
+                actor_id="system",
             )

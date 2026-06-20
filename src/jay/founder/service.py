@@ -14,7 +14,9 @@ class FounderService:
         self.event_service = EventService(session)
         self.projector = FounderProjector()
 
-    def update_profile(self, update: FounderProfileUpdate, actor_id: str) -> FounderProfile:
+    def update_profile(
+        self, update: FounderProfileUpdate, actor_id: str
+    ) -> FounderProfile:
         event = self.event_service.record(
             stream_id="founder:profile",
             event_type="founder.profile.updated",
@@ -27,9 +29,15 @@ class FounderService:
         self.projector.handle(event, self.session)
         self.session.commit()
 
-        return self.session.query(FounderProfile).filter(FounderProfile.id == "default").one()
+        return (
+            self.session.query(FounderProfile)
+            .filter(FounderProfile.id == "default")
+            .one()
+        )
 
-    def record_behavior(self, behavior: BehaviorCreate, actor_id: str) -> BehaviorLedger:
+    def record_behavior(
+        self, behavior: BehaviorCreate, actor_id: str
+    ) -> BehaviorLedger:
         behavior_id = str(uuid4())
 
         event = self.event_service.record(
@@ -44,9 +52,15 @@ class FounderService:
         self.projector.handle(event, self.session)
         self.session.commit()
 
-        return self.session.query(BehaviorLedger).filter(BehaviorLedger.id == behavior_id).one()
+        return (
+            self.session.query(BehaviorLedger)
+            .filter(BehaviorLedger.id == behavior_id)
+            .one()
+        )
 
-    def update_preference_edge(self, source: str, target: str, rel: str, weight: float, actor_id: str) -> None:
+    def update_preference_edge(
+        self, source: str, target: str, rel: str, weight: float, actor_id: str
+    ) -> None:
         event = self.event_service.record(
             stream_id=f"preference:{source}:{target}",
             event_type="preference.edge.updated",
@@ -57,7 +71,7 @@ class FounderService:
                 "source_id": source,
                 "target_id": target,
                 "relationship_type": rel,
-                "weight": weight
+                "weight": weight,
             },
         )
 

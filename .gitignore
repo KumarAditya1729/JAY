@@ -11,3 +11,7 @@ build/
 *.egg-info/
 local-data/
 
+
+models/*.gguf
+*.db
+

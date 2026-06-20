@@ -12,7 +12,9 @@ class DecisionAnalytics:
         total = len(decisions)
 
         resolved = [
-            d for d in decisions if d.outcome_status in ("Success", "Partial Success", "Failure")
+            d
+            for d in decisions
+            if d.outcome_status in ("Success", "Partial Success", "Failure")
         ]
         total_resolved = len(resolved)
 

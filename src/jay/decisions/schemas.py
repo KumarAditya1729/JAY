@@ -2,6 +2,7 @@ from datetime import datetime
 from uuid import UUID
 from pydantic import BaseModel, Field
 
+
 class DecisionCreate(BaseModel):
     statement: str
     decision_type: str
@@ -17,10 +18,12 @@ class DecisionCreate(BaseModel):
     trust_envelope: str | None = None
     linked_entity_ids: list[str] = Field(default_factory=list)
 
+
 class DecisionOutcome(BaseModel):
-    outcome_status: str # "Success", "Partial Success", "Failure", "Unknown"
+    outcome_status: str  # "Success", "Partial Success", "Failure", "Unknown"
     actual_outcome: str | None = None
     lessons_learned: str | None = None
+
 
 class DecisionResponse(BaseModel):
     id: UUID

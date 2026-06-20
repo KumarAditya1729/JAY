@@ -1,0 +1,10 @@
+{
+  "name": "jay",
+  "version": "1.0.0",
+  "description": "JAY Root",
+  "scripts": {
+    "build": "cd frontend && npm run build",
+    "dev": "cd frontend && npm run dev",
+    "start": "cd frontend && npm run dev"
+  }
+}

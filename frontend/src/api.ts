@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8001';
+const API_BASE = 'http://localhost:8002';
 
 export async function fetchAPI(endpoint: string, options?: RequestInit) {
   const url = `${API_BASE}${endpoint}`;
@@ -7,6 +7,7 @@ export async function fetchAPI(endpoint: string, options?: RequestInit) {
       ...options,
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer dev_key_only_change_in_prod',
         ...(options?.headers || {})
       }
     });
@@ -48,3 +49,51 @@ export const getFounderDecisionStyle = () => fetchAPI('/founder/decision-style')
 
 // Command Center
 export const getCommandCenter = () => fetchAPI('/chief-of-staff/command-center');
+
+// Ingestion
+export const uploadFile = async (file: File) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  const url = `${API_BASE}/ingestion/upload`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer dev_key_only_change_in_prod'
+    },
+    body: formData
+  });
+  if (!res.ok) throw new Error(`Upload Error: ${res.status}`);
+  return res.json();
+};
+export const getIngestionStatus = () => fetchAPI('/ingestion/status');
+export const getPendingReviews = () => fetchAPI('/ingestion/pending-reviews');
+export const getIngestionAccuracy = () => fetchAPI('/ingestion/accuracy');
+export const getConnectorAudits = () => fetchAPI('/ingestion/connectors/audit');
+export const approveReview = (id: string) => fetchAPI(`/ingestion/reviews/${id}/approve`, { method: 'POST' });
+export const rejectReview = (id: string) => fetchAPI(`/ingestion/reviews/${id}/reject`, { method: 'POST' });
+export const editReview = (id: string, data: any) => fetchAPI(`/ingestion/reviews/${id}/edit`, { 
+  method: 'PUT',
+  body: JSON.stringify(data)
+});
+export const syncGithub = (repoName: string) => fetchAPI('/ingestion/github/sync', {
+  method: 'POST',
+  body: JSON.stringify({ repo_name: repoName })
+});
+
+// Outcomes & Executions
+export const getOutcomeMetrics = () => fetchAPI('/outcomes/metrics');
+export const getPendingOutcomes = () => fetchAPI('/outcomes/pending');
+export const logOutcome = (data: any) => fetchAPI('/outcomes/log', {
+  method: 'POST',
+  body: JSON.stringify(data)
+});
+export const getRecommendationAudit = (id: string) => fetchAPI(`/trust/recommendations/${id}/audit`);
+export const getInferredOutcomes = () => fetchAPI('/outcomes/inferred');
+export const confirmOutcome = (outcomeId: string, status: string) => fetchAPI('/outcomes/confirm', {
+  method: 'POST',
+  body: JSON.stringify({ outcome_id: outcomeId, status })
+});
+
+// Observation OS & Attention OS
+export const getActiveSession = () => fetchAPI('/observation/session');
+export const getAttentionAudit = () => fetchAPI('/attention/audit');

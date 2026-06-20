@@ -18,7 +18,11 @@ class FounderProjector(Projector):
 
     def reset(self, session: Session) -> None:
         if session.bind.dialect.name == "postgresql":
-            session.execute(text("TRUNCATE TABLE founder_profile, behavior_ledger, preference_edges;"))
+            session.execute(
+                text(
+                    "TRUNCATE TABLE founder_profile, behavior_ledger, preference_edges;"
+                )
+            )
         else:
             session.execute(text("DELETE FROM founder_profile;"))
             session.execute(text("DELETE FROM behavior_ledger;"))
@@ -47,11 +51,13 @@ class FounderProjector(Projector):
         session.add(behavior)
 
     def _apply_profile_updated(self, event: EventLog, session: Session) -> None:
-        profile = session.query(FounderProfile).filter(FounderProfile.id == "default").first()
+        profile = (
+            session.query(FounderProfile).filter(FounderProfile.id == "default").first()
+        )
         if not profile:
             profile = FounderProfile(id="default")
             session.add(profile)
-        
+
         payload = event.payload
         for k, v in payload.items():
             if hasattr(profile, k) and v is not None:

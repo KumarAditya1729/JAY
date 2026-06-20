@@ -54,7 +54,9 @@ def get_briefing(session: Session = Depends(get_session)):
     leverage_summary = leverage_service.get_ratio()
 
     # Open commitments
-    commitments = session.query(MemoryItem).filter(MemoryItem.kind == "commitment").all()
+    commitments = (
+        session.query(MemoryItem).filter(MemoryItem.kind == "commitment").all()
+    )
     open_commitments = [
         {"id": str(c.id), "title": c.title, "due": c.occurred_at}
         for c in commitments

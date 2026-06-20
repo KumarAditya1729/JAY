@@ -30,7 +30,11 @@ class LeverageService:
         self.session.add(event)
         LeverageProjector().handle(event, self.session)
         self.session.commit()
-        return self.session.query(LeverageLedger).order_by(LeverageLedger.created_at.desc()).first()
+        return (
+            self.session.query(LeverageLedger)
+            .order_by(LeverageLedger.created_at.desc())
+            .first()
+        )
 
     def get_ratio(self) -> LeverageRatio:
         stats = self.session.query(

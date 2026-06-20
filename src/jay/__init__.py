@@ -1,2 +1,1 @@
 """JAY core package."""
-

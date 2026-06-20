@@ -12,7 +12,9 @@ from jay.leverage.projector import LeverageProjector
 from jay.decisions.projector import DecisionProjector
 from jay.founder.projector import FounderProjector
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -39,7 +41,105 @@ def main() -> None:
     # rebuild-all
     subparsers.add_parser("rebuild-all", help="Rebuild all projections")
 
+    # speak
+    speak_parser = subparsers.add_parser("speak", help="Speak text using Jarvis voice")
+    speak_parser.add_argument("text", help="Text to speak")
+
+    # daemon
+    daemon_parser = subparsers.add_parser(
+        "daemon", help="Run the proactive background observer daemon"
+    )
+    daemon_parser.add_argument(
+        "--interval", type=int, default=3600, help="Interval in seconds between checks"
+    )
+
+    # listen
+    listen_parser = subparsers.add_parser(
+        "listen", help="Listen to the microphone and respond"
+    )
+    listen_parser.add_argument(
+        "--continuous",
+        action="store_true",
+        help="Listen continuously for the wake word",
+    )
+
     args = parser.parse_args()
+
+    if args.command == "speak":
+        import asyncio
+        from jay.voice.tts import speak
+
+        asyncio.run(speak(args.text))
+        sys.exit(0)
+
+    if args.command == "daemon":
+        import asyncio
+        from jay.engines.observer import ObserverDaemon
+
+        daemon = ObserverDaemon(interval_seconds=args.interval)
+        try:
+            asyncio.run(daemon.run())
+        except KeyboardInterrupt:
+            print("\nObserver daemon shut down.")
+        sys.exit(0)
+
+    if args.command == "listen":
+        import asyncio
+        from jay.voice.stt import Listener
+        from jay.intelligence.llm import generate_jarvis_response
+        from jay.voice.tts import speak
+
+        listener = Listener(model_size="base")
+
+        if args.continuous:
+            for text in listener.listen_continuously():
+                text_lower = text.lower()
+                if "jay" in text_lower:
+                    print(f"\n[Wake Word Detected]: {text}")
+
+                    context = "The Founder just spoke to you via continuous voice."
+                    instruction = f"Respond to this concisely: {text}"
+
+                    async def process_and_speak():
+                        jarvis_message = await generate_jarvis_response(
+                            context, instruction
+                        )
+                        if jarvis_message:
+                            print(f"JAY: {jarvis_message}")
+                            await speak(jarvis_message)
+                        else:
+                            await speak("I'm sorry, I could not process that.")
+
+                    asyncio.run(process_and_speak())
+                else:
+                    # Ignore background chatter
+                    print(f"Ignored background chatter: {text}")
+            sys.exit(0)
+
+        else:
+            text = listener.listen_and_transcribe(timeout=None)
+
+            if text:
+                print(f"You said: {text}")
+                context = "The Founder just spoke to you via voice."
+                instruction = f"Respond to this concisely: {text}"
+
+                async def process_and_speak():
+                    jarvis_message = await generate_jarvis_response(
+                        context, instruction
+                    )
+                    if jarvis_message:
+                        print(f"JAY: {jarvis_message}")
+                        await speak(jarvis_message)
+
+                    else:
+                        await speak("I'm sorry, I could not process that.")
+
+                asyncio.run(process_and_speak())
+            else:
+                print("No speech detected.")
+
+            sys.exit(0)
 
     projectors = []
     if args.command == "rebuild-memory":

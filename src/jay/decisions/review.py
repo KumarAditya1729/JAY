@@ -39,7 +39,9 @@ class DecisionReviewEngine:
             for d in failed
         ]
         what_should_change = [
-            p["description"] for p in detected_patterns if p["severity"] in ("Medium", "High")
+            p["description"]
+            for p in detected_patterns
+            if p["severity"] in ("Medium", "High")
         ]
 
         if not what_should_change:

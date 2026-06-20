@@ -15,11 +15,22 @@ from jay.api.briefing import router as briefing_router
 from jay.decisions.api import router as decisions_router
 from jay.founder.api import router as founder_router
 from jay.chief_of_staff.router import router as chief_of_staff_router
+from jay.api.voice import router as voice_router
+from jay.api.auth import verify_api_key
+from jay.api.execution import router as execution_router
+from jay.api.ingestion import router as ingestion_router
+from jay.api.outcomes import router as outcomes_router
+from jay.api.observation import router as observation_router
+from jay.api.attention import router as attention_router
+from jay.engines.reality.ingestion import router as reality_router
+
+# Import models to ensure they are registered with Base metadata
 
 app = FastAPI(
     title="JAY Memory Core",
     description="Local-first memory foundation for Joint Artificial You.",
     version="0.1.0",
+    dependencies=[Depends(verify_api_key)],
 )
 
 app.add_middleware(
@@ -37,6 +48,13 @@ app.include_router(briefing_router)
 app.include_router(decisions_router)
 app.include_router(founder_router)
 app.include_router(chief_of_staff_router)
+app.include_router(voice_router)
+app.include_router(execution_router)
+app.include_router(ingestion_router)
+app.include_router(outcomes_router)
+app.include_router(observation_router)
+app.include_router(attention_router)
+app.include_router(reality_router)
 
 
 @app.on_event("startup")
@@ -55,7 +73,9 @@ def health() -> dict[str, str]:
 
 
 @app.post("/memory", response_model=MemoryRead)
-def record_memory(memory: MemoryCreate, session: Session = Depends(get_session)) -> MemoryItem:
+def record_memory(
+    memory: MemoryCreate, session: Session = Depends(get_session)
+) -> MemoryItem:
     return MemoryService(session).record(memory)
 
 
@@ -83,7 +103,9 @@ def audit_events(
     limit: int = Query(default=50, ge=1, le=200),
     session: Session = Depends(get_session),
 ) -> list[dict]:
-    rows = session.query(EventLog).order_by(EventLog.occurred_at.desc()).limit(limit).all()
+    rows = (
+        session.query(EventLog).order_by(EventLog.occurred_at.desc()).limit(limit).all()
+    )
     return [
         {
             "id": str(row.id),
@@ -100,3 +122,13 @@ def audit_events(
         for row in rows
     ]
 
+from pydantic import BaseModel
+class MissionPayload(BaseModel):
+    task_description: str
+
+@app.post("/missions/deploy")
+async def deploy_mission(payload: MissionPayload):
+    from jay.engines.execution import ExecutionEngine
+    engine = ExecutionEngine()
+    result = await engine.delegate_task(payload.task_description)
+    return {"status": "deployed", "result": result}

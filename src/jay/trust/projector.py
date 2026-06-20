@@ -20,7 +20,7 @@ class TrustProjector(Projector):
             return
 
         trust_data = event.trust
-        
+
         ledger_entry = TrustLedger(
             entity_type=event.entity_type,
             entity_id=event.entity_id,
@@ -31,9 +31,9 @@ class TrustProjector(Projector):
             evidence_score=trust_data.get("evidence_score", 0.5),
             assumptions=trust_data.get("assumptions", []),
             evidence=trust_data.get("evidence", []),
-            created_at=event.occurred_at
+            created_at=event.occurred_at,
         )
-        
+
         session.add(ledger_entry)
 
     def reset(self, session: Session) -> None:
