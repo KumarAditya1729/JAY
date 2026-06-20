@@ -126,7 +126,6 @@ class RecommendationEngine:
         try:
             import asyncio
             from jay.engines.llm import generate_chat
-            import asyncio
             
             def _run_llm():
                 return generate_chat(

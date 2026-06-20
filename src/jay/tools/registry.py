@@ -1,4 +1,4 @@
-from typing import Dict, Callable, Any
+from typing import Dict, Callable
 from jay.tools.schemas import ToolManifest
 from jay.tools.core_tools import read_file, write_file, search_files, git_status
 

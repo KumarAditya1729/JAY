@@ -1,6 +1,6 @@
 import uuid
 import hashlib
-from datetime import datetime, timezone
+from datetime import datetime
 from jay.db import SessionLocal
 from jay.engines.models import RealityProofLedger
 from jay.engines.autonomy_governance import AutonomyGovernanceEngine

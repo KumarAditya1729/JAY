@@ -30,7 +30,7 @@ def main():
                 )
 
                 if response.status_code == 200:
-                    print(f"[Sent to JAY Inference Engine]")
+                    print("[Sent to JAY Inference Engine]")
                 else:
                     print(
                         f"[API ERROR] JAY Backend returned {response.status_code}: {response.text}"

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Request, BackgroundTasks
+from fastapi import APIRouter, BackgroundTasks
 from pydantic import BaseModel
 import json
 from jay.engines.observation_router import ObservationRouter

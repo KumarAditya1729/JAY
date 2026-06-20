@@ -1,6 +1,5 @@
 import asyncio
 import logging
-from jay.engines.observation_router import ObservationRouter
 
 logger = logging.getLogger(__name__)
 

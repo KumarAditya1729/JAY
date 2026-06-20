@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 from jay.db import Base
 from jay.events.engine import ReplayEngine
-from jay.intent.models import IntentNode, IntentEdge
+from jay.intent.models import IntentNode
 from jay.intent.projector import IntentProjector
 from jay.leverage.models import LeverageLedger
 from jay.leverage.projector import LeverageProjector
@@ -13,8 +13,6 @@ from jay.memory.models import EventLog, MemoryItem
 from jay.memory.projector import MemoryProjector
 from jay.trust.models import TrustLedger
 from jay.trust.projector import TrustProjector
-import jay.intent.models as intent_models
-import jay.leverage.models as leverage_models
 import jay.memory.models as models
 import jay.trust.models as trust_models
 import jay.decisions.models as decision_models

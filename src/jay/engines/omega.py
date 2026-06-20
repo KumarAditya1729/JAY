@@ -1,4 +1,3 @@
-import uuid
 import json
 import asyncio
 from datetime import datetime, timezone, timedelta

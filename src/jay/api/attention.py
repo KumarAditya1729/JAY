@@ -2,7 +2,6 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from jay.db import get_session
 from jay.engines.models import WorkSessionLedger, MissionLedger
-from jay.config import get_settings
 from datetime import datetime, timezone, timedelta
 
 router = APIRouter(prefix="/attention", tags=["Attention OS"])
@@ -53,8 +52,6 @@ async def get_attention_audit(session: Session = Depends(get_session)):
         "Write a 2-3 paragraph critique. Identify focus fragmentation, mission drift, or overengineering. "
         "Point out discrepancies between their declared missions and actual time spent."
     )
-
-    settings = get_settings()
 
     try:
         import asyncio

@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field
-from typing import Dict, Any, Callable, Optional
 
 class ToolManifest(BaseModel):
     name: str = Field(..., description="Unique string identifier for the tool")

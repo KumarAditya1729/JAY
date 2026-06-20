@@ -1,7 +1,6 @@
 from jay.db import SessionLocal
 from jay.engines.models import SystemAccuracyLedger, FounderVersusJAYLedger
 from collections import defaultdict
-import datetime
 
 class SystemAccuracyEngine:
     @staticmethod

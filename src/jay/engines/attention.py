@@ -24,13 +24,13 @@ class AttentionEngine:
         opportunities = self.opportunity_engine.analyze()
         
         # Phase 10.1: Relationship Intelligence
-        relationship_data = RelationshipIntelligenceEngine.analyze_all()
+        relationship_data = RelationshipIntelligenceEngine.analyze_all(self.session)
         
         # Phase 10.2: Mission Intelligence
-        mission_data = MissionIntelligenceEngine.analyze_missions()
+        mission_data = MissionIntelligenceEngine.analyze_missions(self.session)
         
         # Phase 10.3: Business Intelligence
-        business_data = BusinessIntelligenceEngine.analyze_business_reality()
+        business_data = BusinessIntelligenceEngine.analyze_business_reality(self.session)
 
         # Score risks (high score is bad, so it gets high attention)
         for risk in risks:
@@ -72,7 +72,7 @@ class AttentionEngine:
                         entity_id=str(rel.id),
                         entity_title=f"Contact {rel.role}: {rel.name}",
                         attention_score=round(data["leverage_score"] * 1.5, 2), # Multiplied heavily
-                        why_it_matters=f"High-Value Relationship at Risk.",
+                        why_it_matters="High-Value Relationship at Risk.",
                         evidence=f"Strategic Value {rel.strategic_value}. Health dropped to {round(data['health_score'], 2)}. No recent contact.",
                         risk_of_delay="Loss of strategic leverage and revenue.",
                         expected_leverage_gain="Restoring relationship health.",
@@ -102,7 +102,7 @@ class AttentionEngine:
                             entity_title=f"Project Stalled: {p_data['project'].title}",
                             attention_score=0.95, # Very high attention
                             why_it_matters=f"Forecast indicates momentum is dead (Velocity: {p_data['velocity']} tasks/day).",
-                            evidence=f"Pending tasks accumulating without progress.",
+                            evidence="Pending tasks accumulating without progress.",
                             risk_of_delay="Mission failure.",
                             expected_leverage_gain="Unblocking critical path.",
                         )

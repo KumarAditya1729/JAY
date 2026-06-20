@@ -1,5 +1,4 @@
 from datetime import datetime, timezone, timedelta
-from sqlalchemy import func
 from jay.db import SessionLocal
 from jay.engines.models import WorkSessionLedger, OutcomeLedger, ProjectLedger
 

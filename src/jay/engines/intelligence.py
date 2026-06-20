@@ -37,7 +37,7 @@ class IntelligenceEngine:
         warnings = []
         if latest.velocity_trend == "Slowing":
             warnings.append(
-                f"Stagnation Warning: Velocity is slowing. You closed fewer items this week than last."
+                "Stagnation Warning: Velocity is slowing. You closed fewer items this week than last."
             )
 
         if (

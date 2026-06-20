@@ -13,33 +13,41 @@ class RelationshipIntelligenceEngine:
     }
 
     @staticmethod
-    def analyze_all():
+    def analyze_all(db_session=None):
+        if db_session is not None:
+            relationships = db_session.query(RelationshipLedger).all()
+            return RelationshipIntelligenceEngine._do_analyze(db_session, relationships)
+
         with SessionLocal() as db:
             relationships = db.query(RelationshipLedger).all()
-            results = []
+            return RelationshipIntelligenceEngine._do_analyze(db, relationships)
+
+    @staticmethod
+    def _do_analyze(db, relationships):
+        results = []
+
+        for rel in relationships:
+            health = RelationshipIntelligenceEngine.calculate_health(db, rel)
+            leverage = RelationshipIntelligenceEngine.calculate_leverage(rel)
+            is_neglected = RelationshipIntelligenceEngine.detect_neglect(rel)
             
-            for rel in relationships:
-                health = RelationshipIntelligenceEngine.calculate_health(db, rel)
-                leverage = RelationshipIntelligenceEngine.calculate_leverage(rel)
-                is_neglected = RelationshipIntelligenceEngine.detect_neglect(rel)
-                
-                # Fetch pending commitments for this relationship
-                commitments = db.query(CommitmentLedger).filter(
-                    CommitmentLedger.relationship_id == rel.id,
-                    CommitmentLedger.status == "Pending"
-                ).all()
-                
-                results.append({
-                    "relationship": rel,
-                    "health_score": health,
-                    "leverage_score": leverage,
-                    "is_neglected": is_neglected,
-                    "pending_commitments": len(commitments)
-                })
+            # Fetch pending commitments for this relationship
+            commitments = db.query(CommitmentLedger).filter(
+                CommitmentLedger.relationship_id == rel.id,
+                CommitmentLedger.status == "Pending"
+            ).all()
             
-            # Sort by leverage descending, so we prioritize the most important relationships
-            results.sort(key=lambda x: x["leverage_score"], reverse=True)
-            return results
+            results.append({
+                "relationship": rel,
+                "health_score": health,
+                "leverage_score": leverage,
+                "is_neglected": is_neglected,
+                "pending_commitments": len(commitments)
+            })
+
+        # Sort by leverage descending, so we prioritize the most important relationships
+        results.sort(key=lambda x: x["leverage_score"], reverse=True)
+        return results
 
     @staticmethod
     def calculate_health(db, rel: RelationshipLedger) -> float:

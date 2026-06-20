@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 import asyncio
 
-from jay.config import get_settings
+from jay.engines.llm import generate_chat
 from jay.engines.execution import execute_terminal_command
 
 logger = logging.getLogger(__name__)
@@ -13,8 +13,6 @@ async def generate_jarvis_response(context: str, instruction: str) -> Optional[s
     Generate a response from the local LLM using the Jarvis persona,
     with the ability to call tools if needed.
     """
-    settings = get_settings()
-
     system_prompt = (
         "You are JAY, a highly intelligent, exceptionally polite, and concise British AI assistant. "
         "You serve a single Founder. "

@@ -10,50 +10,56 @@ from jay.engines.models import (
 
 class MissionIntelligenceEngine:
     @staticmethod
-    def analyze_missions():
+    def analyze_missions(db_session=None):
+        if db_session is not None:
+            return MissionIntelligenceEngine._do_analyze(db_session)
+
+        with SessionLocal() as db:
+            return MissionIntelligenceEngine._do_analyze(db)
+
+    @staticmethod
+    def _do_analyze(db):
         """
         Analyzes all active missions, returning their health, forecasted stall state,
         and strategic bottlenecks.
         """
         results = []
-        with SessionLocal() as db:
-            missions = db.query(MissionLedger).filter(MissionLedger.status == "Active").all()
-            for mission in missions:
-                projects = db.query(ProjectLedger).filter(ProjectLedger.mission_id == mission.id, ProjectLedger.status == "Active").all()
-                project_data = []
+        missions = db.query(MissionLedger).filter(MissionLedger.status == "Active").all()
+        for mission in missions:
+            projects = db.query(ProjectLedger).filter(ProjectLedger.mission_id == mission.id, ProjectLedger.status == "Active").all()
+            project_data = []
+
+            mission_health = 0.0
+
+            for project in projects:
+                velocity = MissionIntelligenceEngine.calculate_task_velocity(db, project.id)
+                forecast = MissionIntelligenceEngine.forecast_momentum(db, project.id, velocity)
                 
-                mission_health = 0.0
-                
-                for project in projects:
-                    velocity = MissionIntelligenceEngine.calculate_task_velocity(db, project.id)
-                    forecast = MissionIntelligenceEngine.forecast_momentum(db, project.id, velocity)
-                    
-                    project_data.append({
-                        "project": project,
-                        "velocity": velocity,
-                        "forecast": forecast
-                    })
-                    
-                    if forecast == "Stall":
-                        mission_health -= 10.0
-                    elif forecast == "Accelerating":
-                        mission_health += 10.0
-                        
-                    mission_health += project.momentum_score
-                    
-                mission_health = max(0.0, mission_health / max(len(projects), 1))
-                mission.health_score = mission_health
-                
-                bottlenecks = MissionIntelligenceEngine.identify_bottlenecks(db, [p.id for p in projects])
-                
-                results.append({
-                    "mission": mission,
-                    "projects": project_data,
-                    "bottlenecks": bottlenecks
+                project_data.append({
+                    "project": project,
+                    "velocity": velocity,
+                    "forecast": forecast
                 })
                 
-            db.commit()
-            return results
+                if forecast == "Stall":
+                    mission_health -= 10.0
+                elif forecast == "Accelerating":
+                    mission_health += 10.0
+                    
+                mission_health += project.momentum_score
+                
+            mission_health = max(0.0, mission_health / max(len(projects), 1))
+            mission.health_score = mission_health
+
+            bottlenecks = MissionIntelligenceEngine.identify_bottlenecks(db, [p.id for p in projects])
+
+            results.append({
+                "mission": mission,
+                "projects": project_data,
+                "bottlenecks": bottlenecks
+            })
+
+        return results
 
     @staticmethod
     def calculate_task_velocity(db, project_id) -> float:
