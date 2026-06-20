@@ -1,5 +1,4 @@
 from datetime import datetime, timezone, timedelta
-from sqlalchemy import func
 from jay.db import SessionLocal
 from jay.engines.models import FinancialLedger, OutcomeLedger
 
@@ -7,7 +6,20 @@ class BusinessIntelligenceEngine:
     FOUNDER_HOURLY_RATE = 500.0 # Standard $500/hr opportunity cost
     
     @staticmethod
-    def analyze_business_reality():
+    def analyze_business_reality(db_session=None):
+        if db_session is not None:
+            mrr = BusinessIntelligenceEngine.calculate_mrr(db_session)
+            runway_months, burn_rate = BusinessIntelligenceEngine.calculate_runway(db_session)
+            founder_roi, hours_tracked = BusinessIntelligenceEngine.calculate_founder_roi(db_session)
+
+            return {
+                "mrr": mrr,
+                "runway_months": runway_months,
+                "monthly_burn_rate": burn_rate,
+                "founder_roi_score": founder_roi,
+                "hours_tracked": hours_tracked
+            }
+
         with SessionLocal() as db:
             mrr = BusinessIntelligenceEngine.calculate_mrr(db)
             runway_months, burn_rate = BusinessIntelligenceEngine.calculate_runway(db)

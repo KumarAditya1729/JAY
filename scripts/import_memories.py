@@ -1,5 +1,4 @@
 import sys
-from pathlib import Path
 from jay.db import SessionLocal
 from jay.memory.service import MemoryService
 from jay.memory.schemas import MemoryCreate

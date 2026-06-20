@@ -1,3 +1,4 @@
+from pydantic import BaseModel
 from fastapi import Depends, FastAPI, Query
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import Session
@@ -122,7 +123,6 @@ def audit_events(
         for row in rows
     ]
 
-from pydantic import BaseModel
 class MissionPayload(BaseModel):
     task_description: str
 

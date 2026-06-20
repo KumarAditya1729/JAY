@@ -1,5 +1,4 @@
 import sys
-from pathlib import Path
 from jay.db import SessionLocal
 from jay.intent.service import IntentService
 from jay.intent.schemas import IntentNodeCreate, IntentNodeType

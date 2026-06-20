@@ -1,8 +1,6 @@
-import subprocess
 import logging
 
 from jay.db import SessionLocal
-from jay.engines.models import ExecutionLedger
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +15,6 @@ class ExecutionEngine:
     async def delegate_task(self, task_description: str) -> str:
         import asyncio
         import json
-        import re
         from jay.engines.llm import generate_chat
         
         import os
@@ -56,7 +53,6 @@ class ExecutionEngine:
         # Build state machine ledger entry
         import uuid
         from jay.engines.models import ExecutionWorkflowLedger
-        from jay.db import SessionLocal
         
         workflow_id = str(uuid.uuid4())
         with SessionLocal() as db:
@@ -154,7 +150,7 @@ class ExecutionEngine:
                         w.state = "WAITING_APPROVAL"
                         w.context = f"Tool: {tool_name}, Args: {arguments}"
                         db.commit()
-                    observation = f"Command queued for Founder approval. Execution paused."
+                    observation = "Command queued for Founder approval. Execution paused."
                 else:
                     observation = registry.execute(tool_name, arguments)
                 

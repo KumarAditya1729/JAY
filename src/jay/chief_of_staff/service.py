@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 from jay.engines.risk import RiskEngine
 from jay.decisions.models import DecisionLedger
 
-from .schemas import CommandCenterResponse, CriticalRisk, DecisionReview, FounderIntelligence
+from .schemas import CommandCenterResponse, CriticalRisk, DecisionReview, FounderIntelligence, HighestLeverageAction
 from .commitment_monitor import CommitmentMonitor
 from .relationship_monitor import RelationshipMonitor
 from .prioritizer import Prioritizer
@@ -101,7 +101,7 @@ class ChiefOfStaffService:
                 impact_score=10.0,
                 estimated_leverage="100x",
                 confidence_score=0.95,
-                constraint_reason=f"Removing this bottleneck increases projected mission velocity significantly."
+                constraint_reason="Removing this bottleneck increases projected mission velocity significantly."
             )
         else:
             hla = await self.recommendations.generate_highest_leverage_action()

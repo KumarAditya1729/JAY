@@ -1,4 +1,3 @@
-import uuid
 import json
 import asyncio
 from datetime import datetime, timezone, timedelta
@@ -101,5 +100,5 @@ class ExecutiveCouncilEngine:
             logging.error(f"Live Debate generation failed: {e}")
             return {
                 "topic": "System Reality Sync Failure",
-                "arguments": [{"executive": "SYSTEM", "stance": "ERROR", "argument": f"Failed to generate live debate."}]
+                "arguments": [{"executive": "SYSTEM", "stance": "ERROR", "argument": "Failed to generate live debate."}]
             }

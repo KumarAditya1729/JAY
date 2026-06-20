@@ -1,12 +1,10 @@
 import pytest
-from datetime import datetime, timezone
 from sqlalchemy import create_engine, JSON
 from sqlalchemy.orm import sessionmaker
 
 from jay.db import Base
-from jay.founder.models import BehaviorLedger, PreferenceEdge, FounderProfile
+from jay.founder.models import BehaviorLedger, PreferenceEdge
 from jay.founder.engines.preference import PreferenceEngine
-from jay.founder.engines.decision_style import DecisionStyleEngine
 from jay.founder.engines.consistency import ConsistencyEngine
 from jay.decisions.models import DecisionLedger
 from jay.intent.models import IntentNode

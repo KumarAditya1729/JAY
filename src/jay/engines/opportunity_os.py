@@ -1,5 +1,4 @@
 from datetime import datetime, timezone, timedelta
-from sqlalchemy.orm import Session
 from jay.db import SessionLocal
 from jay.engines.models import OpportunityLedger, CommunicationLedger, ObservationLedger
 from jay.engines.llm import generate_chat
@@ -38,7 +37,7 @@ class OpportunityOSEngine:
             for o in recent_obs:
                 context += f"ID: {o.id} | Source: {o.source} | Payload: {o.payload}\\n"
 
-            system_prompt = \"\"\"
+            system_prompt = """
 You are JAY's Opportunity OS Engine.
 Your job is to scan the Founder's recent communications and observations to detect HIGH-LEVERAGE BUSINESS OPPORTUNITIES.
 We are looking for: Customers, Partnerships, Funding, Hiring, Acquisition, or Distribution.
@@ -48,16 +47,16 @@ If you find an opportunity, return a JSON array of objects with this exact schem
   {
     "title": "Short title of opportunity",
     "description": "Why this is an opportunity",
-    "opportunity_type": "Customer" | "Partnership" | "Funding",
+    "opportunity_type": "Customer | Partnership | Funding",
     "revenue_potential": "Estimate e.g., ₹5L–₹15L annually, or 'High', 'Unknown'",
     "recommended_action": "What the founder should do next",
-    "score": 0.0 to 1.0 (float, 1.0 is highest leverage),
+    "score": "0.0 to 1.0 (float, 1.0 is highest leverage)",
     "source_id": "UUID from the input context"
   }
 ]
 
 If NO opportunities are found, return an empty array: []
-\"\"\"
+"""
 
             try:
                 response = generate_chat(

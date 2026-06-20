@@ -118,7 +118,6 @@ class PolymathEngine:
 
     async def run_website_review_board(self, ui_code: str) -> str:
         """Runs the 5-expert panel on proposed UI code according to the Website Constitution."""
-        from jay.engines.llm import get_llama
         import asyncio
         import os
         

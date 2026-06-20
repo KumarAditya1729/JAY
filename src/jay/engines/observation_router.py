@@ -62,7 +62,7 @@ class ObservationRouter:
             )
             content = response["choices"][0]["message"]["content"]
             analysis = ObservationAnalysis(**json.loads(content))
-        except Exception as e:
+        except Exception:
             # Fallback if LLM fails
             analysis = ObservationAnalysis(
                 normalized_text=f"Raw text (Failed Normalization): {raw_text}",

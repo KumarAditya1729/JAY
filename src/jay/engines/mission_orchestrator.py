@@ -1,6 +1,5 @@
 from jay.db import SessionLocal
 from jay.engines.models import MissionAutonomyLedger
-import uuid
 
 class MissionOrchestratorEngine:
     @staticmethod

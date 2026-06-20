@@ -1,5 +1,5 @@
 from jay.db import SessionLocal
-from jay.engines.models import FounderDecisionLedger, FounderPreferenceLedger, FounderBehaviorLedger, FounderEnergyLedger
+from jay.engines.models import FounderPreferenceLedger
 import datetime
 
 class DigitalTwinEngine:

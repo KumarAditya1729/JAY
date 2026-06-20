@@ -9,7 +9,6 @@ from jay.engines.attention import AttentionEngine
 from jay.engines.opportunity import OpportunityEngine
 from jay.engines.relationship import RelationshipEngine
 from jay.engines.risk import RiskEngine
-from jay.leverage.models import LeverageLedger
 from jay.memory.models import MemoryItem
 from jay.trust.models import TrustLedger
 import jay.memory.models as models
@@ -177,21 +176,25 @@ def test_attention_engine(session):
         linked_entity_ids=["some_intent"]
     )
     
+    session.add_all([c, d])
+    session.commit()
+
+    from jay.engines.models import RelationshipLedger
+
+    from uuid import uuid4
+
     # 1 neglected relationship
-    p = MemoryItem(
-        id="person1",
-        kind="person",
-        title="Important Contact",
-        body="test",
-        source="system",
-        importance=5,
-        confidence=1.0,
-        tags=[],
-        created_at=now - timedelta(days=100),
-        updated_at=now - timedelta(days=100)
+    p = RelationshipLedger(
+        id=uuid4(),
+        name="Important Contact",
+        role="Investor",
+        last_contact_date=now - timedelta(days=100),
+        strategic_value=0.9,
+        revenue_generated=100000,
+        trust_level=0.5
     )
     
-    session.add_all([c, d, p])
+    session.add(p)
     session.commit()
     
     engine = AttentionEngine(session)

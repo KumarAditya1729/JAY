@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, BackgroundTasks
 from sqlalchemy.orm import Session
 from jay.db import get_session
-from jay.engines.models import ObservationLedger
+from jay.db import SessionLocal
+from datetime import datetime, timezone, timedelta
+from jay.engines.models import ObservationLedger, WorkSessionLedger
 from jay.engines.inference import ContextCorrelator
 from pydantic import BaseModel
 from typing import Dict, Any
@@ -12,11 +14,6 @@ router = APIRouter(prefix="/observation", tags=["Observation"])
 class ObservationPayload(BaseModel):
     source: str
     payload: Dict[str, Any]
-
-
-from jay.db import SessionLocal
-from datetime import datetime, timezone, timedelta
-from jay.engines.models import WorkSessionLedger
 
 
 def get_or_create_active_session(session: Session) -> WorkSessionLedger:
